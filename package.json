@@ -11,7 +11,9 @@
   },
   "dependencies": {
     "@ant-design/icons": "^5.3.6",
+    "@ffmpeg/ffmpeg": "^0.12.10",
     "antd": "^5.16.4",
+    "axios": "^1.7.2",
     "bootstrap": "^5.3.3",
     "canvas": "^2.11.2",
     "ffmpeg.js": "^4.2.9003",
@@ -20,7 +22,7 @@
     "react-bootstrap-sweetalert": "^5.2.0",
     "react-dom": "^18.2.0",
     "react-dropzone": "^14.2.3",
-    "react-router-dom": "^6.23.0",
+    "react-router-dom": "^6.23.1",
     "sweetalert": "^2.1.2"
   },
   "devDependencies": {

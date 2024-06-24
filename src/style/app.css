@@ -20,24 +20,37 @@ body {
   background-color: #ffc436;
 }
 
-.dropzone {
-  border: 2px solid black;
-  padding: 20px;
-  padding-bottom: 10px;
-  border-radius: 10px;
-  text-align: center;
-  cursor: pointer;
+.nav-link a {
+  color: #fff;
+  padding: 5px 0px 5px 48px;
+  text-decoration: none;
 }
 
-.keterangan {
+.home-container {
+  background-image: url('../assets/bg.jpg'); /* Ganti URL dengan gambar latar belakang yang diinginkan */
+  background-size: cover;
+  background-position: center;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   text-align: center;
-  margin-top: 40px;
-  margin-bottom: 10px;
-  font-size: 16px;
   color: black;
 }
 
-.image-hasil {
-  max-width: 100%;
-  height: auto;
+.home-content {
+  max-width: 600px;
+  padding: 20px;
+  background-color: white; /* Transparansi untuk konten */
+  border-radius: 10px;
+}
+
+.home-content h1 {
+  font-size: 3rem;
+  margin-bottom: 20px;
+}
+
+.home-content p {
+  font-size: 1.5rem;
+  line-height: 1.6;
 }
