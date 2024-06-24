@@ -6,7 +6,8 @@ import ffmpeg from 'ffmpeg.js/ffmpeg-mp4.js';
 const AudioCompressor = () => {
     const [originalFileSize, setOriginalFileSize] = useState(0); // Ukuran file asli
     const [compressedFileSize, setCompressedFileSize] = useState(0); // Ukuran file setelah kompresi
-    const [compressedFile, setCompressedFile] = useState(null);
+    const [originalFile, setOriginalFile] = useState(null); // File asli
+    const [compressedFile, setCompressedFile] = useState(null); // File setelah kompresi
     const [loading, setLoading] = useState(false);
 
     const compressAudio = async (file) => {
@@ -17,6 +18,9 @@ const AudioCompressor = () => {
                 setLoading(false);
                 return;
             }
+
+            // Simpan file asli
+            setOriginalFile(file);
 
             // Hitung ukuran file asli
             setOriginalFileSize(file.size);
@@ -61,14 +65,21 @@ const AudioCompressor = () => {
                 <p style={{ color: '#007bff', marginTop: '10px' }}>Proses kompresi sedang berlangsung...</p>
             ) : (
                 <>
+                    {originalFile && (
+                        <>
+                            <h3>Audio Asli</h3>
+                            <audio controls src={URL.createObjectURL(originalFile)} style={{ marginTop: '20px' }} />
+                            <p style={{ marginTop: '10px' }}>Ukuran File Asli: {(originalFileSize / 1024).toFixed(2)} KB</p>
+                        </>
+                    )}
                     {compressedFile && (
                         <>
+                            <h3>Audio Setelah Kompresi</h3>
                             <audio controls src={URL.createObjectURL(compressedFile)} style={{ marginTop: '20px' }} />
                             <a href={URL.createObjectURL(compressedFile)} download="compressed_audio.mp3" style={{ display: 'block', marginTop: '10px', textDecoration: 'none', color: '#28a745' }}>
                                 Download Compressed Audio
                             </a>
-                            <p style={{ marginTop: '10px' }}>Ukuran File Asli: {(originalFileSize / 1024).toFixed(2)} KB</p>
-                            <p style={{ marginTop: '5px' }}>Ukuran File Setelah Kompresi: {(compressedFileSize / 1024).toFixed(2)} KB</p>
+                            <p style={{ marginTop: '10px' }}>Ukuran File Setelah Kompresi: {(compressedFileSize / 1024).toFixed(2)} KB</p>
                         </>
                     )}
                 </>
