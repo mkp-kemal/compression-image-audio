@@ -11,11 +11,11 @@ const CompressImage = () => {
     const [fileName, setFileName] = useState('');
     const [imageWidth, setImageWidth] = useState(null);
     const [imageHeight, setImageHeight] = useState(null);
-    const extension = 'jpeg'; // Menggunakan JPEG untuk kompresi lossy
     const [fileSize, setFileSize] = useState(null);
     const [compressedFileSize, setCompressedFileSize] = useState(null);
     const [compressionQuality, setCompressionQuality] = useState(0.7); // Default quality for JPEG
     const [compressionAccuracy, setCompressionAccuracy] = useState(null); // Persentase keakuratan kompresi
+    const [compressionFormat, setCompressionFormat] = useState('jpeg'); // Default compression format
 
     const onDrop = async (acceptedFiles) => {
         if (acceptedFiles[0].type !== 'image/jpeg' && acceptedFiles[0].type !== 'image/png') {
@@ -56,7 +56,7 @@ const CompressImage = () => {
             canvas.height = img.height;
             ctx.drawImage(img, 0, 0);
 
-            const compressedImageUrl = canvas.toDataURL(`image/${extension}`, compressionQuality);
+            const compressedImageUrl = canvas.toDataURL(`image/${compressionFormat}`, compressionQuality);
             setCompressedImage(compressedImageUrl);
 
             // Hitung ukuran file hasil kompresi
@@ -81,7 +81,7 @@ const CompressImage = () => {
         if (compressedImage) {
             const downloadLink = document.createElement('a');
             downloadLink.href = compressedImage;
-            downloadLink.download = `compressed_${fileName}_by_mkp.${extension}`; // Nama file saat diunduh
+            downloadLink.download = `compressed_${fileName}_by_mkp.${compressionFormat}`; // Nama file saat diunduh
             downloadLink.click();
         }
     };
@@ -118,6 +118,18 @@ const CompressImage = () => {
                             onChange={(e) => setCompressionQuality(parseFloat(e.target.value))}
                             style={{ width: '50px', padding: '5px', borderRadius: '3px', border: '1px solid #ccc', backgroundColor: '#f9f9f9' }}
                         />
+                    </div>
+                    <div style={{ marginBottom: '20px', textAlign: 'center' }}>
+                        <label htmlFor="format">Algoritma: </label>
+                        <select
+                            id="format"
+                            value={compressionFormat}
+                            onChange={(e) => setCompressionFormat(e.target.value)}
+                            style={{ padding: '5px', borderRadius: '3px', border: '1px solid #ccc', backgroundColor: '#f9f9f9' }}
+                        >
+                            <option value="jpeg">Join Photographic Experts Group</option>
+                            <option value="webp">Arithmetic Entropy Encoding</option>
+                        </select>
                     </div>
                     <button style={{ display: 'block', margin: '0 auto', padding: '10px 20px', backgroundColor: '#007bff', color: '#fff', border: 'none', borderRadius: '5px', cursor: 'pointer' }} onClick={handleCompress} disabled={!selectedFile}>
                         {compressing ? 'Compressing...' : 'Compress'}
