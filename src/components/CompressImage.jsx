@@ -16,6 +16,8 @@ const CompressImage = () => {
   const [compressionQuality, setCompressionQuality] = useState(0.7); // Default quality for JPEG
   const [compressionAccuracy, setCompressionAccuracy] = useState(null); // Persentase keakuratan kompresi
   const [compressionFormat, setCompressionFormat] = useState('jpeg'); // Default compression format
+  const [compressionStartTime, setCompressionStartTime] = useState(null);
+  const [compressionEndTime, setCompressionEndTime] = useState(null);
 
   const onDrop = async (acceptedFiles) => {
     if (acceptedFiles[0].type !== 'image/jpeg' && acceptedFiles[0].type !== 'image/png') {
@@ -46,6 +48,7 @@ const CompressImage = () => {
     }
 
     setCompressing(true);
+    setCompressionStartTime(new Date()); // Atur waktu mulai kompresi
 
     try {
       const canvas = createCanvas();
@@ -73,6 +76,7 @@ const CompressImage = () => {
     } catch (error) {
       swal('Error', 'Terjadi kesalahan saat mengunggah file.', 'error');
     } finally {
+      setCompressionEndTime(new Date()); // Atur waktu selesai kompresi
       setCompressing(false);
     }
   };
@@ -131,6 +135,7 @@ const CompressImage = () => {
           <button style={{ display: 'block', margin: '0 auto', padding: '10px 20px', backgroundColor: '#007bff', color: '#fff', border: 'none', borderRadius: '5px', cursor: 'pointer' }} onClick={handleCompress} disabled={!selectedFile}>
             {compressing ? 'Compressing...' : 'Compress'}
           </button>
+          {compressionStartTime && compressionEndTime && <p style={{ textAlign: 'center', marginTop: '10px' }}>Waktu kompresi: {((compressionEndTime - compressionStartTime) / 1000).toFixed(2)} detik</p>}
         </>
       )}
 

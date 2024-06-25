@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Dropzone from 'react-dropzone';
 import swal from 'sweetalert';
 import ffmpeg from 'ffmpeg.js/ffmpeg-mp4.js';
@@ -9,21 +9,19 @@ const AudioCompressor = () => {
   const [originalFile, setOriginalFile] = useState(null); // File asli
   const [compressedFile, setCompressedFile] = useState(null); // File setelah kompresi
   const [loading, setLoading] = useState(false);
+  const [compressionTime, setCompressionTime] = useState(0); // Waktu kompresi
+  const [compressionFormat, setCompressionFormat] = useState('mp3'); // Format kompresi
 
   const compressAudio = async (file) => {
     setLoading(true);
     try {
-      if (file.type !== 'audio/mpeg') {
-        swal('File Error', 'Format file tidak sesuai. Hanya file dengan format MP3 yang diizinkan.', 'error');
-        setLoading(false);
-        return;
-      }
-
       // Simpan file asli
       setOriginalFile(file);
 
       // Hitung ukuran file asli
       setOriginalFileSize(file.size);
+
+      const startTime = performance.now();
 
       const reader = new FileReader();
       reader.onload = async (event) => {
@@ -40,6 +38,10 @@ const AudioCompressor = () => {
         // Hitung ukuran file setelah kompresi
         setCompressedFileSize(compressedBlob.size);
 
+        const endTime = performance.now();
+        const timeInSeconds = (endTime - startTime) / 1000;
+        setCompressionTime(timeInSeconds.toFixed(2));
+
         setLoading(false);
       };
 
@@ -50,9 +52,30 @@ const AudioCompressor = () => {
     }
   };
 
+  useEffect(() => {
+    if (loading || compressedFile) {
+      // Menghitung waktu kompresi hanya ketika loading atau compressedFile berubah
+      console.log(`Waktu kompresi: ${compressionTime} detik`);
+    }
+  }, [loading, compressedFile, compressionTime]);
+
+  const handleFormatChange = (format) => {
+    setCompressionFormat(format);
+  };
   return (
     <div style={{ maxWidth: '400px', margin: '0 auto', marginTop: '50px', textAlign: 'center', padding: '20px', backgroundColor: '#f4f4f4', borderRadius: '10px', boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)' }}>
       <h2 style={{ textAlign: 'center', marginBottom: '20px', color: '#333' }}>Kompresi Audio</h2>
+      <div style={{ marginBottom: '20px' }}>
+        <button
+          style={{ marginRight: '10px', backgroundColor: compressionFormat === 'mp3' ? '#007bff' : '#ccc', color: 'white', border: 'none', padding: '5px 10px', borderRadius: '5px', cursor: 'pointer' }}
+          onClick={() => handleFormatChange('mp3')}
+        >
+          MP3
+        </button>
+        <button style={{ backgroundColor: compressionFormat === 'aac' ? '#007bff' : '#ccc', color: 'white', border: 'none', padding: '5px 10px', borderRadius: '5px', cursor: 'pointer' }} onClick={() => handleFormatChange('aac')}>
+          AAC
+        </button>
+      </div>
       <Dropzone onDrop={(acceptedFiles) => compressAudio(acceptedFiles[0])}>
         {({ getRootProps, getInputProps }) => (
           <div {...getRootProps()} style={{ cursor: 'pointer', padding: '20px', border: '2px dashed #007bff', borderRadius: '5px', marginBottom: '20px' }}>
@@ -80,6 +103,7 @@ const AudioCompressor = () => {
                 Download Compressed Audio
               </a>
               <p style={{ marginTop: '10px' }}>Ukuran File Setelah Kompresi: {(compressedFileSize / 1024).toFixed(2)} KB</p>
+              <p>Waktu Kompresi: {compressionTime} detik</p>
             </>
           )}
         </>
